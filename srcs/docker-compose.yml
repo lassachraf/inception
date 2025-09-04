@@ -1,0 +1,34 @@
+# No version needed since working with: Docker Compose V2
+
+volumes:
+    mariadb:
+    wordpress-db:
+    wordpress-files:
+
+networks:
+    inception-network:
+        driver: bridge
+        name: inception-network
+
+services:
+    nginx:
+        container_name: nginx
+        restart: unless-stopped
+        build: ./requirements/nginx
+
+        env_file:
+            - .env
+        ports:
+            - "443:443"
+        # depends_on:
+        #     - wordpress
+        networks:
+            - inception-network
+        volumes:
+            - wordpress-files: /home/alassiqu/data
+        environment:
+            - DOMAIN_NAME=${DOMAIN_NAME}
+
+
+    mariadb:
+    # wordpress:
