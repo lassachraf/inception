@@ -20,15 +20,38 @@ services:
             - .env
         ports:
             - "443:443"
-        # depends_on:
-        #     - wordpress
+        depends_on:
+            - wordpress
         networks:
             - inception-network
         volumes:
-            - wordpress-files: /home/alassiqu/data
+            - wordpress-files:/var/www/html
         environment:
             - DOMAIN_NAME=${DOMAIN_NAME}
 
-
     mariadb:
-    # wordpress:
+        container_name: mariadb
+        restart: unless-stopped
+        build: ./requirements/mariadb
+
+        env_file:
+            - .env
+        networks:
+            - inception-network
+        volumes:
+            - mariadb:/var/lib/mysql
+
+    wordpress:
+        restart: unless-stopped
+        container_name: wordpress
+        build: ./requirements/wordpress
+
+        env_file:
+            - .env
+        depends_on:
+            - mariadb
+        networks:
+            - inception-network
+        volumes:
+            - wordpress-files:/var/www/html
+

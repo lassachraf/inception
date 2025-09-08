@@ -2,7 +2,7 @@
 NAME		= inception
 
 # Docker Compose command with config file
-COMPOSE		= docker-compose -f ./srcs/docker-compose.yml
+COMPOSE		= docker compose -f ./srcs/docker-compose.yml
 
 # Environment file
 ENV_FILE	= ./srcs/.env
