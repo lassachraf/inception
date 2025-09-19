@@ -1,4 +1,5 @@
 services:
+
   mariadb:
     image: mariadb
     env_file: .env
@@ -49,10 +50,12 @@ volumes:
     driver_opts:
       type: 'none'
       o: 'bind'
-      device: '/home/itsmeachraf/missi/wordpress'
+      device: '/home/alassiqu/data/wordpress' #1337_path
+      # device: '/home/itsmeachraf/missi/wordpress' #home_path
   db_data:
     driver: local
     driver_opts:
       type: 'none'
       o: 'bind'
-      device: '/home/itsmeachraf/missi/mariadb'
+      device: '/home/alassiqu/data/mariadb' #1337_path
+      # device: '/home/itsmeachraf/missi/mariadb' #home_path
