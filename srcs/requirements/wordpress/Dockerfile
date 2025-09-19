@@ -1,22 +1,23 @@
-FROM		debian:bullseye
+FROM	debian:bullseye
 
-RUN		apt update -y && \
-		apt install -y php-fpm php-mysql curl && \
-		apt-get clean && \
-		rm -rf /var/lib/apt/lists/*
+RUN		apt update -y && apt install -y wget php php-fpm php-mysql mariadb-client
 
-RUN		mkdir -p /var/www/html
+RUN		wget https://wordpress.org/wordpress-6.8.1.tar.gz -P /var/www
 
-RUN		curl -o /tmp/wordpress.tar.gz https://wordpress.org/latest.tar.gz && \
-		tar -xzf /tmp/wordpress.tar.gz -C /var/www/html --strip-components=1 && \
-		rm /tmp/wordpress.tar.gz
+RUN 	cd /var/www && tar -xzf wordpress-6.8.1.tar.gz && rm wordpress-6.8.1.tar.gz
 
-RUN		chown -R www-data:www-data /var/www/html && \
-		chmod -R 755 /var/www/html
+RUN		chmod -R 777 /var/www/wordpress
 
-COPY		tools/wordpress-configuration.sh /usr/local/bin/
-RUN		chmod +x /usr/local/bin/wordpress-configuration.sh
+COPY 	conf/www.conf /etc/php/7.4/fpm/pool.d/www.conf
 
-EXPOSE		9000
+RUN		wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
 
-CMD		["/usr/local/bin/wordpress-configuration.sh"]
+RUN		chmod 777 wp-cli.phar
+
+RUN		mv wp-cli.phar /usr/local/bin/wp
+
+COPY 	tools/wpconfig.sh /
+
+RUN     mkdir /run/php
+
+CMD		["bash", "wpconfig.sh"]

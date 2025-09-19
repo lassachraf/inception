@@ -1,63 +1,26 @@
-# Project name
-NAME		= inception
+NAME	=	inception
 
-# Docker Compose command with config file
-COMPOSE		= docker compose -f ./srcs/docker-compose.yml
+all:	up
 
-# Environment file
-ENV_FILE	= ./srcs/.env
+up:
+		docker compose -f srcs/docker-compose.yml up -d --build
 
-# Default target: build and start all containers in detached mode
-all:		up
-
-# Build the images without cache
-build:
-			@$(COMPOSE) --env-file $(ENV_FILE) build --no-cache
-
-# Start all containers in detached mode
-up:		
-			@$(COMPOSE) --env-file $(ENV_FILE) up --detach
-
-# Stop and remove all containers, networks, and volumes
 down:
-			@$(COMPOSE) --env-file $(ENV_FILE) down
+		docker compose -f srcs/docker-compose.yml down
 
-# Stop all containers without removing them
-stop:
-			@$(COMPOSE) --env-file $(ENV_FILE) stop
-
-# Start stopped containers
-start:
-			@$(COMPOSE) --env-file $(ENV_FILE) start
-
-# Show container status
-ps:
-			@$(COMPOSE) --env-file $(ENV_FILE) ps
-
-# Show logs from all containers
 logs:
-			@$(COMPOSE) --env-file $(ENV_FILE) logs
+		docker compose -f srcs/docker-compose.yml logs -f
 
-# Follow logs from all containers
-logs-f:
-			@$(COMPOSE) --env-file $(ENV_FILE) logs --follow
+ps:
+		docker compose -f srcs/docker-compose.yml ps
 
-# Remove all containers, networks, volumes, and images
-clean:		down
-			@docker system prune -a --force
+clean:	down
+		docker system prune -af --volumes
 
-# Remove all volumes (warning: will delete all data)
-fclean:		clean
-			@docker volume prune --force
+fclean: clean
+		docker volume rm $$(docker volume ls -q) || true
+		docker network rm $$(docker network ls -q) 2>/dev/null || true
 
-# Rebuild everything from scratch
+
+restart:	down up
 re:			fclean all
-
-# Check if .env file exists
-$(ENV_FILE):
-			@echo "ERROR: .env file not found at $(ENV_FILE)"
-			@echo "Create it based on the .env.example template"
-			@exit 1
-
-# Prevent make from confusing with files of the same name
-.PHONY:		all build up down stop start ps logs logs-f clean fclean re
