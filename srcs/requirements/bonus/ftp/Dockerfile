@@ -5,6 +5,8 @@ RUN         apt-get update && \
             apt-get clean && \
             rm -rf /var/lib/apt/lists/*
 
+RUN	    mkdir -p /var/run/vsftpd/empty && \
+	    chmod 755 /var/run/vsftpd/empty
 
 COPY        conf/vsftpd.conf /etc/vsftpd.conf
 COPY        tools/start_ftp.sh /

@@ -43,8 +43,8 @@ services:
     image: ftp
     env_file: .env
     restart: always
-    container_name: mariadb
-    build: ./requirements/ftp
+    container_name: ftp
+    build: ./requirements/bonus/ftp
     ports:
       - "21:21"
       - "30000-30010:30000-30010"
