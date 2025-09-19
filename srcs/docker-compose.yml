@@ -6,10 +6,10 @@ services:
     restart: always
     container_name: mariadb
     build: ./requirements/mariadb
-    volumes:
-      - db_data:/var/lib/mysql
     networks:
       - inception_network
+    volumes:
+      - db_data:/var/lib/mysql
 
   wordpress:
     env_file: .env
@@ -19,25 +19,39 @@ services:
     build: ./requirements/wordpress
     depends_on:
       - mariadb
-    volumes:
-      - wp_data:/var/www/wordpress
     networks:
       - inception_network
+    volumes:
+      - wp_data:/var/www/wordpress
 
   nginx:
     image: nginx
+    env_file: .env
+    restart: always
     container_name: nginx
     build: ./requirements/nginx
-    restart: always
     depends_on:
       - wordpress
     ports:
       - "443:443"
-    volumes:
-      - wp_data:/var/www/wordpress
-    env_file: .env
     networks:
       - inception_network
+    volumes:
+      - wp_data:/var/www/wordpress
+
+  ftp:
+    image: ftp
+    env_file: .env
+    restart: always
+    container_name: mariadb
+    build: ./requirements/ftp
+    ports:
+      - "21:21"
+      - "30000-30010:30000-30010"
+    networks:
+      - inception_network
+    volumes:
+      - wp_data:/var/www/wordpress
 
 networks:
   inception_network:
@@ -48,14 +62,16 @@ volumes:
   wp_data:
     driver: local
     driver_opts:
-      type: 'none'
       o: 'bind'
-      device: '/home/alassiqu/data/wordpress' #1337_path
+      type: 'none'
+      device: '/home/vboxuser/data/wordpress' #vm_path
+      # device: '/home/alassiqu/data/wordpress' #1337_path
       # device: '/home/itsmeachraf/missi/wordpress' #home_path
   db_data:
     driver: local
     driver_opts:
-      type: 'none'
       o: 'bind'
-      device: '/home/alassiqu/data/mariadb' #1337_path
+      type: 'none'
+      device: '/home/vboxuser/data/mariadb' #vm_path
+      # device: '/home/alassiqu/data/mariadb' #1337_path
       # device: '/home/itsmeachraf/missi/mariadb' #home_path
