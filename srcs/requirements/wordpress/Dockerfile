@@ -1,6 +1,7 @@
 FROM	debian:bullseye
 
-RUN		apt update -y && apt install -y wget php php-fpm php-mysql mariadb-client
+RUN		apt update -y && apt install -y wget php php-fpm php-mysql mariadb-client && \
+        apt-get clean && rm -rf /var/lib/apt/lists/*
 
 RUN		wget https://wordpress.org/wordpress-6.8.1.tar.gz -P /var/www
 

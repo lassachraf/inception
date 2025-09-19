@@ -18,6 +18,7 @@ services:
     container_name: wordpress
     build: ./requirements/wordpress
     depends_on:
+      - redis
       - mariadb
     networks:
       - inception_network
@@ -52,6 +53,17 @@ services:
       - inception_network
     volumes:
       - wp_data:/var/www/wordpress
+    
+  redis:
+    image: redis
+    env_file: .env
+    restart: always
+    container_name: redis
+    build: ./requirements/bonus/redis
+    networks:
+      - inception_network
+    volumes:
+      - redis_data:/data
 
 networks:
   inception_network:
@@ -66,7 +78,7 @@ volumes:
       type: 'none'
       device: '/home/vboxuser/data/wordpress' #vm_path
       # device: '/home/alassiqu/data/wordpress' #1337_path
-      # device: '/home/itsmeachraf/missi/wordpress' #home_path
+      # device: '/home/itsmeachraf/data/wordpress' #home_path
   db_data:
     driver: local
     driver_opts:
@@ -74,4 +86,12 @@ volumes:
       type: 'none'
       device: '/home/vboxuser/data/mariadb' #vm_path
       # device: '/home/alassiqu/data/mariadb' #1337_path
-      # device: '/home/itsmeachraf/missi/mariadb' #home_path
+      # device: '/home/itsmeachraf/data/mariadb' #home_path
+  redis_data:
+    driver: local
+    driver_opts:
+      o: 'bind'
+      type: 'none'
+      device: '/home/vboxuser/data/redis' #vm_path
+      # device: '/home/alassiqu/data/redis' #1337_path
+      # device: '/home/itsmeachraf/data/redis' #home_path

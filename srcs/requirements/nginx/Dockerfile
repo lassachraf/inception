@@ -2,7 +2,8 @@ FROM	debian:bullseye
 
 RUN		apt update -y && \
 		apt install  -y nginx openssl && \
-		mkdir -p /etc/nginx/ssl
+		mkdir -p /etc/nginx/ssl && \
+		apt-get clean && rm -rf /var/lib/apt/lists/*
 
 RUN 	openssl req -x509 -nodes \
 		-keyout /etc/nginx/ssl/inception.key \
