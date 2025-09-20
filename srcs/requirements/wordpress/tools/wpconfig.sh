@@ -51,4 +51,3 @@ echo "WordPress Configuration Completed!"
 echo "Starting PHP-FPM..."
 
 exec php-fpm7.4 -F
-

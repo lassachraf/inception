@@ -1,7 +1,5 @@
-FROM    debian:bullseye-slim
+FROM            debian:bullseye
 
-RUN     apt-get update && \
-        apt-get install -y redis-server && \
-        apt-get clean && rm -rf /var/lib/apt/lists/*
+RUN             apt update && apt install -y redis-server
 
-CMD ["redis-server", "--protected-mode no"]
+CMD             ["redis-server", "--protected-mode", "no"]

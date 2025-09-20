@@ -53,17 +53,6 @@ services:
       - inception_network
     volumes:
       - wp_data:/var/www/wordpress
-    
-  redis:
-    image: redis
-    env_file: .env
-    restart: always
-    container_name: redis
-    build: ./requirements/bonus/redis
-    networks:
-      - inception_network
-
-
 
 networks:
   inception_network:
@@ -87,5 +76,11 @@ volumes:
       device: '/home/vboxuser/data/mariadb' #vm_path
       # device: '/home/alassiqu/data/mariadb' #1337_path
       # device: '/home/itsmeachraf/data/mariadb' #home_path
-
-
+  redis_data:
+    driver: local
+    driver_opts:
+      o: 'bind'
+      type: 'none'
+      device: '/home/vboxuser/data/redis' #vm_path
+      # device: '/home/alassiqu/data/redis' #1337_path
+      # device: '/home/itsmeachraf/data/redis' #home_path
