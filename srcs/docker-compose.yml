@@ -18,7 +18,6 @@ services:
     container_name: wordpress
     build: ./requirements/wordpress
     depends_on:
-      - redis
       - mariadb
     networks:
       - inception_network
@@ -54,6 +53,48 @@ services:
     volumes:
       - wp_data:/var/www/wordpress
 
+  redis:
+    image: redis
+    env_file: .env
+    restart: always
+    container_name: redis
+    build: ./requirements/bonus/redis
+    networks:
+      - inception_network
+
+  adminer:
+    image: adminer
+    restart: always
+    container_name: adminer
+    build: ./requirements/bonus/adminer
+    networks:
+      - inception_network
+    ports:
+      - "8080:8080"
+
+  website:
+    image: website
+    restart: always
+    container_name: website
+    build: ./requirements/bonus/website
+    networks:
+      - inception_network
+    ports:
+      - "80:80"
+
+  portainer:
+    restart: always
+    image: portainer
+    container_name: portainer
+    build: ./requirements/bonus/portainer
+    ports:
+      - "9999:9999"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ptr_data:/data
+    networks:
+      - inception_network
+
 networks:
   inception_network:
     driver: bridge
@@ -65,22 +106,22 @@ volumes:
     driver_opts:
       o: 'bind'
       type: 'none'
-      device: '/home/vboxuser/data/wordpress' #vm_path
+      # device: '/home/vboxuser/data/wordpress' #vm_path
       # device: '/home/alassiqu/data/wordpress' #1337_path
-      # device: '/home/itsmeachraf/data/wordpress' #home_path
+      device: '/home/itsmeachraf/data/wordpress' #home_path
   db_data:
     driver: local
     driver_opts:
       o: 'bind'
       type: 'none'
-      device: '/home/vboxuser/data/mariadb' #vm_path
+      # device: '/home/vboxuser/data/mariadb' #vm_path
       # device: '/home/alassiqu/data/mariadb' #1337_path
-      # device: '/home/itsmeachraf/data/mariadb' #home_path
-  redis_data:
+      device: '/home/itsmeachraf/data/mariadb' #home_path
+  ptr_data:
     driver: local
     driver_opts:
       o: 'bind'
       type: 'none'
-      device: '/home/vboxuser/data/redis' #vm_path
+      # device: '/home/vboxuser/data/redis' #vm_path
       # device: '/home/alassiqu/data/redis' #1337_path
-      # device: '/home/itsmeachraf/data/redis' #home_path
+      device: '/home/itsmeachraf/data/portainer' #home_path

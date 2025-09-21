@@ -18,9 +18,11 @@ clean:	down
 		docker system prune -af --volumes
 
 fclean: clean
-		docker volume rm $$(docker volume ls -q) || true
-		docker network rm $$(docker network ls -q) 2>/dev/null || true
-
+		@docker volume rm $$(docker volume ls -q) || true
+		@docker network rm $$(docker network ls -q) 2>/dev/null || true
+		@sudo rm -rf /home/itsmeachraf/data/mariadb/*
+		@sudo rm -rf /home/itsmeachraf/data/wordpress/*
+		@sudo rm -rf /home/itsmeachraf/data/portainer/*
 
 restart:	down up
 re:			fclean all
