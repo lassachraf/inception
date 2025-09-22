@@ -3,7 +3,7 @@ NAME	=	inception
 all:	up
 
 up:
-		docker compose -f srcs/docker-compose.yml up -d --build
+		docker compose -f srcs/docker-compose.yml up -d --build --progress=tty
 
 down:
 		docker compose -f srcs/docker-compose.yml down
