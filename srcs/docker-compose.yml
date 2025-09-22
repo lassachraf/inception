@@ -2,7 +2,6 @@ services:
 
   mariadb:
     image: mariadb
-    env_file: .env
     restart: always
     container_name: mariadb
     build: ./requirements/mariadb
@@ -10,9 +9,13 @@ services:
       - inception_network
     volumes:
       - db_data:/var/lib/mysql
+    env_file:
+      - .env
+      - ../secrets/passwords.txt
+      - ../secrets/credentials.txt
+      - ../secrets/root_passwords.txt
 
   wordpress:
-    env_file: .env
     restart: always
     image: wordpress
     container_name: wordpress
@@ -23,10 +26,14 @@ services:
       - inception_network
     volumes:
       - wp_data:/var/www/wordpress
+    env_file:
+      - .env
+      - ../secrets/passwords.txt
+      - ../secrets/credentials.txt
+      - ../secrets/root_passwords.txt
 
   nginx:
     image: nginx
-    env_file: .env
     restart: always
     container_name: nginx
     build: ./requirements/nginx
@@ -38,10 +45,14 @@ services:
       - inception_network
     volumes:
       - wp_data:/var/www/wordpress
+    env_file:
+      - .env
+      - ../secrets/passwords.txt
+      - ../secrets/credentials.txt
+      - ../secrets/root_passwords.txt
 
   ftp:
     image: ftp
-    env_file: .env
     restart: always
     container_name: ftp
     build: ./requirements/bonus/ftp
@@ -52,15 +63,22 @@ services:
       - inception_network
     volumes:
       - wp_data:/var/www/wordpress
+    env_file:
+      - .env
+      - ../secrets/passwords.txt
+      - ../secrets/credentials.txt
 
   redis:
     image: redis
-    env_file: .env
     restart: always
     container_name: redis
     build: ./requirements/bonus/redis
     networks:
       - inception_network
+    env_file:
+      - .env
+      - ../secrets/passwords.txt
+      - ../secrets/credentials.txt
 
   adminer:
     image: adminer
@@ -71,6 +89,11 @@ services:
       - inception_network
     ports:
       - "8080:8080"
+    env_file:
+      - .env
+      - ../secrets/passwords.txt
+      - ../secrets/credentials.txt
+      - ../secrets/root_passwords.txt
 
   website:
     image: website
@@ -97,31 +120,29 @@ services:
 
 networks:
   inception_network:
-    driver: bridge
     name: inception_network
 
 volumes:
   wp_data:
     driver: local
+    name: 'wp_data'
     driver_opts:
       o: 'bind'
       type: 'none'
-      # device: '/home/vboxuser/data/wordpress' #vm_path
-      # device: '/home/alassiqu/data/wordpress' #1337_path
-      device: '/home/itsmeachraf/data/wordpress' #home_path
+      device: '/home/alassiqu/data/wordpress'
+
   db_data:
     driver: local
+    name: 'db_data'
     driver_opts:
       o: 'bind'
       type: 'none'
-      # device: '/home/vboxuser/data/mariadb' #vm_path
-      # device: '/home/alassiqu/data/mariadb' #1337_path
-      device: '/home/itsmeachraf/data/mariadb' #home_path
+      device: '/home/alassiqu/data/mariadb'
+
   ptr_data:
     driver: local
+    name: 'ptr_data'
     driver_opts:
       o: 'bind'
       type: 'none'
-      # device: '/home/vboxuser/data/redis' #vm_path
-      # device: '/home/alassiqu/data/redis' #1337_path
-      device: '/home/itsmeachraf/data/portainer' #home_path
+      device: '/home/alassiqu/data/portainer'
