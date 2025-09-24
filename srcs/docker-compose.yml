@@ -129,7 +129,7 @@ volumes:
     driver_opts:
       o: 'bind'
       type: 'none'
-      device: '/home/itsmeachraf/data/wordpress'
+      device: '/home/alassiqu/data/wordpress'
 
   db_data:
     driver: local
@@ -137,7 +137,7 @@ volumes:
     driver_opts:
       o: 'bind'
       type: 'none'
-      device: '/home/itsmeachraf/data/mariadb'
+      device: '/home/alassiqu/data/mariadb'
 
   ptr_data:
     driver: local
@@ -145,4 +145,4 @@ volumes:
     driver_opts:
       o: 'bind'
       type: 'none'
-      device: '/home/itsmeachraf/data/portainer'
+      device: '/home/alassiqu/data/portainer'

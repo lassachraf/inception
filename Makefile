@@ -1,10 +1,6 @@
-# ============================================================================ #
-#                                  VARIABLES                                   #
-# ============================================================================ #
-
 NAME			= inception
 
-DATA_DIR		= /home/itsmeachraf/data
+DATA_DIR		= /home/alassiqu/data
 COMPOSE_FILE	= srcs/docker-compose.yml
 
 RESET			= \033[0m
@@ -15,22 +11,18 @@ BLUE			= \033[0;34m
 MAGENTA			= \033[0;35m
 CYAN			= \033[0;36m
 
-ECHO			= echo -e
+ECHO			= echo
 
-all: banner up
-
-# ============================================================================ #
-#                                 DOCKER COMMANDS                              #
-# ============================================================================ #
+all:	up
 
 ## Start all containers
-up: banner-up
+up:
 	@$(ECHO) "$(CYAN)🚀 Starting $(NAME) containers...$(RESET)"
 	@docker compose -f $(COMPOSE_FILE) up -d --build
 	@$(ECHO) "$(GREEN)✅ $(NAME) containers started successfully!$(RESET)"
 
 ## Stop all containers
-down: banner-down
+down:
 	@$(ECHO) "$(YELLOW)🛑 Stopping $(NAME) containers...$(RESET)"
 	@docker compose -f $(COMPOSE_FILE) down
 	@$(ECHO) "$(GREEN)✅ $(NAME) containers stopped successfully!$(RESET)"
@@ -46,14 +38,14 @@ ps:
 	@docker compose -f $(COMPOSE_FILE) ps
 
 ## Clean system (stop containers + prune)
-clean: banner-clean
+clean:
 	@$(ECHO) "$(YELLOW)🧹 Cleaning Docker system...$(RESET)"
 	@docker compose -f $(COMPOSE_FILE) down
 	@docker system prune -af --volumes
 	@$(ECHO) "$(GREEN)✅ Docker system cleaned!$(RESET)"
 
 ## Full clean (everything including volumes and data)
-fclean: banner-fclean
+fclean:
 	@$(ECHO) "$(RED)💥 Nuclear cleanup initiated...$(RESET)"
 	@docker compose -f $(COMPOSE_FILE) down
 	@$(ECHO) "$(YELLOW)Removing volumes...$(RESET)"
@@ -74,11 +66,6 @@ restart: down up
 re: fclean all
 	@$(ECHO) "$(GREEN)♻️  Complete rebuild finished!$(RESET)"
 
-# ============================================================================ #
-#                                 UTILITIES                                    #
-# ============================================================================ #
-
-## Show this help message
 help:
 	@$(ECHO) "$(CYAN)"
 	@$(ECHO) "╔══════════════════════════════════════════════════════════════╗"
@@ -90,46 +77,4 @@ help:
 	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "  $(GREEN)%-15s$(RESET) %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 	@$(ECHO) ""
 
-## Display project banner
-banner:
-	@$(ECHO) "$(CYAN)"
-	@$(ECHO) "╔══════════════════════════════════════════════════════════════╗"
-	@$(ECHO) "║                        $(NAME)                             ║"
-	@$(ECHO) "║                    Docker Environment                        ║"
-	@$(ECHO) "╚══════════════════════════════════════════════════════════════╝"
-	@$(ECHO) "$(RESET)"
-
-banner-up:
-	@$(ECHO) "$(GREEN)"
-	@$(ECHO) "╔══════════════════════════════════════════════════════════════╗"
-	@$(ECHO) "║                       STARTING CONTAINERS                    ║"
-	@$(ECHO) "╚══════════════════════════════════════════════════════════════╝"
-	@$(ECHO) "$(RESET)"
-
-banner-down:
-	@$(ECHO) "$(YELLOW)"
-	@$(ECHO) "╔══════════════════════════════════════════════════════════════╗"
-	@$(ECHO) "║                       STOPPING CONTAINERS                    ║"
-	@$(ECHO) "╚══════════════════════════════════════════════════════════════╝"
-	@$(ECHO) "$(RESET)"
-
-banner-clean:
-	@$(ECHO) "$(BLUE)"
-	@$(ECHO) "╔══════════════════════════════════════════════════════════════╗"
-	@$(ECHO) "║                         CLEANING SYSTEM                      ║"
-	@$(ECHO) "╚══════════════════════════════════════════════════════════════╝"
-	@$(ECHO) "$(RESET)"
-
-banner-fclean:
-	@$(ECHO) "$(RED)"
-	@$(ECHO) "╔══════════════════════════════════════════════════════════════╗"
-	@$(ECHO) "║                        FULL CLEANUP                          ║"
-	@$(ECHO) "╚══════════════════════════════════════════════════════════════╝"
-	@$(ECHO) "$(RESET)"
-
-# ============================================================================ #
-#                                 PHONY TARGETS                                #
-# ============================================================================ #
-
-.PHONY: all up down logs ps clean fclean restart re help banner \
-		banner-up banner-down banner-clean banner-fclean
+.PHONY: all up down logs ps clean fclean restart re help
